@@ -1,7 +1,41 @@
-import { Flex, Text, HStack, Box } from '@chakra-ui/react';
+import { Flex, Text, HStack, Box, VStack } from '@chakra-ui/react';
 import type { NextPage } from 'next';
+import { useEffect, useState } from 'react';
+import { LetterInput } from '../components/LetterInput';
 
 const Home: NextPage = () => {
+  const [selectedPlayer, setSelectedPlayer] = useState('');
+
+  const [currentInput, setCurrentInput] = useState(0);
+  const [currentRow, setCurrentRow] = useState(0);
+
+  const [keyPressed, setKeyPressed] = useState('');
+
+  useEffect(() => {
+    setSelectedPlayer('TACO');
+    setCurrentInput(0);
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('keypress', handleKeyPress);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleInputClick = (index: number) => {
+    setCurrentInput(index);
+  };
+
+  const handleKeyPress = (event: KeyboardEvent) => {
+    const key = event.key.toUpperCase();
+    console.log(key, currentInput);
+
+    // TODO
+    // if (key === 'ENTER') {
+    //   setCurrentRow(currentRow + 1);
+    //   setCurrentInput(0);
+    // }
+  };
+
   return (
     <Flex
       mx="auto"
@@ -19,20 +53,22 @@ const Home: NextPage = () => {
         Daily CS:GO wordle game
       </Text>
 
-      <HStack mt="4rem">
-        <Flex
-          boxSize={20}
-          borderRadius={10}
-          bgColor="green.200"
-          align="center"
-          justify="center"
-          _hover={{ cursor: 'pointer' }}
-        >
-          <Text fontSize="3rem" fontWeight="bold" userSelect="none">
-            A
-          </Text>
-        </Flex>
-      </HStack>
+      <VStack spacing={4} mt="3rem">
+        {[...Array(6)].map((_, row) => (
+          <HStack key={row}>
+            {Array.from(selectedPlayer).map((_, index) => (
+              <LetterInput
+                letter=""
+                row={row}
+                key={index}
+                handleClick={() => handleInputClick(index)}
+                {...(currentInput === index && { isFocused: true })}
+                {...(currentRow === row && { isDisabled: false })}
+              />
+            ))}
+          </HStack>
+        ))}
+      </VStack>
     </Flex>
   );
 };
