@@ -1,6 +1,7 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { ContextProvider } from '../contexts/Context';
 
 import { theme } from '../theme';
 
@@ -10,9 +11,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>csgooo</title>
       </Head>
-      <ChakraProvider theme={theme}>
-        <Component {...pageProps} />
-      </ChakraProvider>
+      <ContextProvider>
+        <ChakraProvider theme={theme}>
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </ContextProvider>
     </>
   );
 }
